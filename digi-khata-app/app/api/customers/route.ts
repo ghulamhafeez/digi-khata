@@ -1,15 +1,31 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
+export async function GET() {
+  try {
+    const customers = await prisma.user.findMany();
+    return Response.json(customers);
+  } catch (error) {
+    return Response.json(
+      { error: "Failed to fetch customers" },
+      { status: 500 }
+    );
+  }
+}
 
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    log: ["error"],
-  });
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { name, email } = body;
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
+    const customer = await prisma.user.create({
+      data: { name, email },
+    });
+
+    return Response.json(customer, { status: 201 });
+  } catch (error) {
+    return Response.json(
+      { error: "Failed to create customer" },
+      { status: 500 }
+    );
+  }
 }
