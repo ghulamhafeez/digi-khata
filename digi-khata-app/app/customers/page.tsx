@@ -1,10 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { toast } from "sonner";
-import { Loader2, Pencil, Plus, Trash2, Users } from "lucide-react";
+import { Loader2, Pencil, Plus, Trash2, Users, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -57,150 +57,216 @@ export default function CustomersPage() {
   };
 
   return (
-    <main className="min-h-screen bg-zinc-50 p-6 md:p-10">
-      <div className="mx-auto max-w-5xl space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Users className="h-6 w-6 text-zinc-700" />
-            <h1 className="text-2xl font-semibold text-zinc-900">Customers</h1>
-            {!loading && (
-              <span className="rounded-full bg-zinc-200 px-2.5 py-0.5 text-xs font-medium text-zinc-700">
-                {customers.length}
-              </span>
-            )}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      {/* Header — matches main page */}
+      <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link href="/">
+                <button className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
+                  <ArrowLeft className="h-4 w-4" />
+                  Home
+                </button>
+              </Link>
+              <div className="h-4 w-px bg-gray-200" />
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <Users className="h-4 w-4 text-blue-600" />
+                </div>
+                <span className="text-lg font-bold text-gray-800">
+                  Customers
+                </span>
+                {!loading && (
+                  <span className="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                    {customers.length}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Add Customer */}
+            <Dialog open={addOpen} onOpenChange={setAddOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="h-4 w-4" />
+                  Add Customer
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add New Customer</DialogTitle>
+                  <DialogDescription>
+                    Fill in the details below to add a new customer to your
+                    Digi Khata.
+                  </DialogDescription>
+                </DialogHeader>
+                <AddCustomerForm
+                  onSuccess={() => {
+                    setAddOpen(false);
+                    fetchCustomers();
+                  }}
+                />
+              </DialogContent>
+            </Dialog>
           </div>
-
-          {/* Add Customer Dialog */}
-          <Dialog open={addOpen} onOpenChange={setAddOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4" />
-                Add Customer
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add Customer</DialogTitle>
-                <DialogDescription>
-                  Fill in the details below to add a new customer.
-                </DialogDescription>
-              </DialogHeader>
-              <AddCustomerForm
-                onSuccess={() => {
-                  setAddOpen(false);
-                  fetchCustomers();
-                }}
-              />
-            </DialogContent>
-          </Dialog>
         </div>
+      </header>
 
-        {/* Customer Table */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base text-zinc-600">
-              All Customers
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            {loading ? (
-              <div className="flex items-center justify-center py-16">
-                <Loader2 className="h-6 w-6 animate-spin text-zinc-400" />
-              </div>
-            ) : customers.length === 0 ? (
-              <div className="flex flex-col items-center justify-center gap-2 py-16 text-zinc-400">
-                <Users className="h-10 w-10" />
-                <p className="text-sm">No customers yet. Add your first one.</p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead className="border-b border-zinc-200 bg-zinc-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left font-medium text-zinc-500">
-                        Name
-                      </th>
-                      <th className="px-6 py-3 text-left font-medium text-zinc-500">
-                        Phone
-                      </th>
-                      <th className="px-6 py-3 text-left font-medium text-zinc-500">
-                        Address
-                      </th>
-                      <th className="px-6 py-3 text-left font-medium text-zinc-500">
-                        Added
-                      </th>
-                      <th className="px-6 py-3 text-right font-medium text-zinc-500">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-zinc-100">
-                    {customers.map((customer) => (
-                      <tr
-                        key={customer.id}
-                        className="hover:bg-zinc-50 transition-colors"
-                      >
-                        <td className="px-6 py-4 font-medium text-zinc-900">
-                          {customer.name}
-                        </td>
-                        <td className="px-6 py-4 text-zinc-500">
-                          {customer.phone ?? (
-                            <span className="text-zinc-300">—</span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 text-zinc-500">
-                          {customer.address ?? (
-                            <span className="text-zinc-300">—</span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 text-zinc-400">
-                          {new Date(customer.createdAt).toLocaleDateString(
-                            "en-PK",
-                            { day: "numeric", month: "short", year: "numeric" }
-                          )}
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            {/* Edit */}
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              aria-label="Edit customer"
-                              onClick={() => setEditCustomer(customer)}
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {loading ? (
+          /* Loading state */
+          <div className="flex items-center justify-center py-32">
+            <div className="flex flex-col items-center gap-3">
+              <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+              <p className="text-sm text-gray-500">Loading customers...</p>
+            </div>
+          </div>
+        ) : customers.length === 0 ? (
+          /* Empty state */
+          <div className="flex flex-col items-center justify-center py-32 gap-4">
+            <div className="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center">
+              <Users className="h-10 w-10 text-blue-500" />
+            </div>
+            <div className="text-center">
+              <h3 className="text-lg font-semibold text-gray-800">
+                No customers yet
+              </h3>
+              <p className="text-sm text-gray-500 mt-1">
+                Add your first customer to get started with Digi Khata.
+              </p>
+            </div>
+            <Button onClick={() => setAddOpen(true)}>
+              <Plus className="h-4 w-4" />
+              Add First Customer
+            </Button>
+          </div>
+        ) : (
+          /* Customer table */
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden">
+            {/* Table header bar */}
+            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <h2 className="font-semibold text-gray-800">All Customers</h2>
+              <span className="text-sm text-gray-500">
+                {customers.length}{" "}
+                {customers.length === 1 ? "customer" : "customers"}
+              </span>
+            </div>
 
-                            {/* Delete */}
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              aria-label="Delete customer"
-                              className="text-red-500 hover:text-red-600 hover:bg-red-50"
-                              disabled={deletingId === customer.id}
-                              onClick={() => handleDelete(customer.id)}
-                            >
-                              {deletingId === customer.id ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              ) : (
-                                <Trash2 className="h-4 w-4" />
-                              )}
-                            </Button>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50 border-b border-gray-100">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      Name
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      Phone
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      Address
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      Added
+                    </th>
+                    <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-50">
+                  {customers.map((customer) => (
+                    <tr
+                      key={customer.id}
+                      className="hover:bg-blue-50/40 transition-colors"
+                    >
+                      {/* Avatar + name */}
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                            <span className="text-xs font-semibold text-blue-700">
+                              {customer.name.charAt(0).toUpperCase()}
+                            </span>
                           </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+                          <span className="font-medium text-gray-900">
+                            {customer.name}
+                          </span>
+                        </div>
+                      </td>
 
-      {/* Edit Dialog — controlled outside the table to avoid re-mounts */}
-      <Dialog open={!!editCustomer} onOpenChange={(open) => !open && setEditCustomer(null)}>
+                      <td className="px-6 py-4 text-gray-500">
+                        {customer.phone ?? (
+                          <span className="text-gray-300">—</span>
+                        )}
+                      </td>
+
+                      <td className="px-6 py-4 text-gray-500 max-w-[200px] truncate">
+                        {customer.address ?? (
+                          <span className="text-gray-300">—</span>
+                        )}
+                      </td>
+
+                      <td className="px-6 py-4 text-gray-400 text-xs">
+                        {new Date(customer.createdAt).toLocaleDateString(
+                          "en-PK",
+                          {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          }
+                        )}
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label="Edit customer"
+                            onClick={() => setEditCustomer(customer)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label="Delete customer"
+                            className="text-red-400 hover:text-red-600 hover:bg-red-50"
+                            disabled={deletingId === customer.id}
+                            onClick={() => handleDelete(customer.id)}
+                          >
+                            {deletingId === customer.id ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Trash2 className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* Footer — matches main page */}
+      <footer className="border-t border-gray-200/50 bg-white/80 backdrop-blur-sm mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <p className="text-center text-sm text-gray-500">
+            © {new Date().getFullYear()} Digi Khata.
+          </p>
+        </div>
+      </footer>
+
+      {/* Edit Dialog */}
+      <Dialog
+        open={!!editCustomer}
+        onOpenChange={(open) => !open && setEditCustomer(null)}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Customer</DialogTitle>
@@ -220,6 +286,6 @@ export default function CustomersPage() {
           )}
         </DialogContent>
       </Dialog>
-    </main>
+    </div>
   );
 }

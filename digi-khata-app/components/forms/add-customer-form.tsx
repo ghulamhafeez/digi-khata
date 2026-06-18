@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -49,7 +49,9 @@ export function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
       reset();
       onSuccess();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to add customer");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to add customer"
+      );
     }
   };
 
@@ -61,7 +63,7 @@ export function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
         </Label>
         <Input
           id="name"
-          placeholder="Customer name"
+          placeholder="e.g. Ahmed Khan"
           {...register("name")}
           aria-invalid={!!errors.name}
         />
@@ -96,9 +98,13 @@ export function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
       </div>
 
       <div className="flex justify-end gap-2 pt-2">
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
-          Add Customer
+        <Button type="submit" disabled={isSubmitting} size="lg">
+          {isSubmitting ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <UserPlus className="h-4 w-4" />
+          )}
+          {isSubmitting ? "Adding..." : "Add Customer"}
         </Button>
       </div>
     </form>

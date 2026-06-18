@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -72,7 +72,7 @@ export function EditCustomerForm({
         </Label>
         <Input
           id="edit-name"
-          placeholder="Customer name"
+          placeholder="e.g. Ahmed Khan"
           {...register("name")}
           aria-invalid={!!errors.name}
         />
@@ -110,9 +110,13 @@ export function EditCustomerForm({
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
-          Save Changes
+        <Button type="submit" disabled={isSubmitting} size="lg">
+          {isSubmitting ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Save className="h-4 w-4" />
+          )}
+          {isSubmitting ? "Saving..." : "Save Changes"}
         </Button>
       </div>
     </form>
