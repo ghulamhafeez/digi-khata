@@ -77,11 +77,6 @@ export default function CustomersPage() {
                 <span className="text-lg font-bold text-gray-800">
                   Customers
                 </span>
-                {!loading && (
-                  <span className="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                    {customers.length}
-                  </span>
-                )}
               </div>
             </div>
 
@@ -145,12 +140,16 @@ export default function CustomersPage() {
         ) : (
           /* Customer table */
           <div className="bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden">
-            {/* Table header bar */}
+            {/* Table header bar — WITH CUSTOMER COUNT */}
             <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-              <h2 className="font-semibold text-gray-800">All Customers</h2>
+              <div className="flex items-center gap-2">
+                <h2 className="font-semibold text-gray-800">All Customers</h2>
+                <span className="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                  {customers.length}
+                </span>
+              </div>
               <span className="text-sm text-gray-500">
-                {customers.length}{" "}
-                {customers.length === 1 ? "customer" : "customers"}
+                {customers.length} {customers.length === 1 ? "customer" : "customers"}
               </span>
             </div>
 

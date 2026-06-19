@@ -17,11 +17,25 @@ model User {
 
 // userId is a plain string — no FK constraint until auth is wired up
 model Customer {
-  id        String   @id @default(cuid())
-  name      String
-  phone     String?
-  address   String?
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String        @id @default(cuid())
+  name         String
+  phone        String?
+  address      String?
+  userId       String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  transactions Transaction[]
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  amount      Float
+  type        String   // "jama" (diya - credit given) | "wapsi" (liya - payment received)
+  description String?
+  customerId  String
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
 }

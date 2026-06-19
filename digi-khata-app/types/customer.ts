@@ -6,4 +6,8 @@ export interface Customer {
   userId: string;
   createdAt: string;
   updatedAt: string;
+  // computed on API responses that include transaction aggregates
+  totalJama?: number;
+  totalWapsi?: number;
+  totalUdhaar?: number; // totalJama - totalWapsi (net outstanding)
 }

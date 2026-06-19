@@ -64,9 +64,9 @@ export default function Home() {
                   <ArrowRight className="h-4 w-4" />
                 </button>
               </Link>
-              <Link href="/dashboard">
+              <Link href="/transactions">
                 <button className="px-6 py-3 bg-white text-gray-700 rounded-xl hover:bg-gray-50 transition-all shadow-md hover:shadow-lg border border-gray-200 font-medium">
-                  View Dashboard
+                  View Transactions
                 </button>
               </Link>
             </div>
