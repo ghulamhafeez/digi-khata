@@ -71,62 +71,56 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Stats */}
-            <div className="flex gap-8 pt-4">
-              <div>
-                <p className="text-2xl font-bold text-gray-900">0+</p>
-                <p className="text-sm text-gray-500">Customers</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">0</p>
-                <p className="text-sm text-gray-500">Transactions</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900">Rs. 0</p>
-                <p className="text-sm text-gray-500">Udhaar</p>
-              </div>
-            </div>
+           
           </div>
 
           {/* Right - Features Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
-                <Users className="h-6 w-6 text-blue-600" />
+            <Link href="/customers">
+              <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl hover:border-blue-200 transition-all hover:-translate-y-1 cursor-pointer">
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+                  <Users className="h-6 w-6 text-blue-600" />
+                </div>
+                <h3 className="font-semibold text-gray-800 mb-1">Customers</h3>
+                <p className="text-sm text-gray-500">
+                  Manage all your customer profiles
+                </p>
               </div>
-              <h3 className="font-semibold text-gray-800 mb-1">Customers</h3>
-              <p className="text-sm text-gray-500">
-                Manage all your customer profiles
-              </p>
-            </div>
+            </Link>
 
-            <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
-                <Wallet className="h-6 w-6 text-green-600" />
+            <Link href="/transactions">
+              <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl hover:border-green-200 transition-all hover:-translate-y-1 cursor-pointer">
+                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+                  <Wallet className="h-6 w-6 text-green-600" />
+                </div>
+                <h3 className="font-semibold text-gray-800 mb-1">Udhaar</h3>
+                <p className="text-sm text-gray-500">Track credit and payments</p>
               </div>
-              <h3 className="font-semibold text-gray-800 mb-1">Udhaar</h3>
-              <p className="text-sm text-gray-500">Track credit and payments</p>
-            </div>
+            </Link>
 
-            <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
-                <ShoppingBag className="h-6 w-6 text-purple-600" />
+            <Link href="/transactions">
+              <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl hover:border-purple-200 transition-all hover:-translate-y-1 cursor-pointer">
+                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+                  <ShoppingBag className="h-6 w-6 text-purple-600" />
+                </div>
+                <h3 className="font-semibold text-gray-800 mb-1">Transactions</h3>
+                <p className="text-sm text-gray-500">
+                  Record sales, expenses & more
+                </p>
               </div>
-              <h3 className="font-semibold text-gray-800 mb-1">Transactions</h3>
-              <p className="text-sm text-gray-500">
-                Record sales, expenses & more
-              </p>
-            </div>
+            </Link>
 
-            <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mb-4">
-                <LayoutDashboard className="h-6 w-6 text-orange-600" />
+            <Link href="/dashboard">
+              <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl hover:border-orange-200 transition-all hover:-translate-y-1 cursor-pointer">
+                <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mb-4">
+                  <LayoutDashboard className="h-6 w-6 text-orange-600" />
+                </div>
+                <h3 className="font-semibold text-gray-800 mb-1">Dashboard</h3>
+                <p className="text-sm text-gray-500">
+                  Get instant business insights
+                </p>
               </div>
-              <h3 className="font-semibold text-gray-800 mb-1">Dashboard</h3>
-              <p className="text-sm text-gray-500">
-                Get instant business insights
-              </p>
-            </div>
+            </Link>
           </div>
         </div>
       </main>

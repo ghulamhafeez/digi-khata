@@ -84,7 +84,7 @@ export function AddTransactionForm({
             <option value="">— Select customer —</option>
             {customers.map((c) => (
               <option key={c.id} value={c.id}>
-                {c.name}{c.phone ? ` · ${c.phone}` : ""}
+                {c.name}
               </option>
             ))}
           </Select>

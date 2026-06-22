@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
   ArrowLeft, ArrowUpCircle, ArrowDownCircle,
@@ -18,12 +19,14 @@ import type { Customer } from "@/types/customer";
 import type { Transaction } from "@/types/transaction";
 
 export default function TransactionsPage() {
+  const router = useRouter();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [customers, setCustomers] = useState<Customer[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [addOpen, setAddOpen] = useState(false);
-  const [editTx, setEditTx] = useState<Transaction | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [customers, setCustomers]       = useState<Customer[]>([]);
+  const [loading, setLoading]           = useState(true);
+  const [addOpen, setAddOpen]           = useState(false);
+  const [editTx, setEditTx]             = useState<Transaction | null>(null);
+  const [deletingId, setDeletingId]     = useState<string | null>(null);
+  const [confirmTx, setConfirmTx]       = useState<Transaction | null>(null); // confirm dialog
 
   const fetchAll = useCallback(async () => {
     try {
@@ -44,13 +47,13 @@ export default function TransactionsPage() {
 
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Delete this transaction?")) return;
-    setDeletingId(id);
+  const handleDelete = async (tx: Transaction) => {
+    setDeletingId(tx.id);
+    setConfirmTx(null);
     try {
-      const res = await fetch(`/api/transactions/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/transactions/${tx.id}`, { method: "DELETE" });
       if (!res.ok) throw new Error();
-      setTransactions((prev) => prev.filter((t) => t.id !== id));
+      setTransactions((prev) => prev.filter((t) => t.id !== tx.id));
       toast.success("Transaction deleted");
     } catch {
       toast.error("Could not delete transaction");
@@ -59,9 +62,9 @@ export default function TransactionsPage() {
     }
   };
 
-  const totalJama   = transactions.filter((t) => t.type === "jama").reduce((s, t) => s + t.amount, 0);
-  const totalWapsi  = transactions.filter((t) => t.type === "wapsi").reduce((s, t) => s + t.amount, 0);
-  const netUdhaar   = totalJama - totalWapsi;
+  const totalJama  = transactions.filter((t) => t.type === "jama").reduce((s, t) => s + t.amount, 0);
+  const totalWapsi = transactions.filter((t) => t.type === "wapsi").reduce((s, t) => s + t.amount, 0);
+  const netUdhaar  = totalJama - totalWapsi;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
@@ -80,7 +83,11 @@ export default function TransactionsPage() {
                 <Receipt className="h-4 w-4 text-blue-600" />
               </div>
               <span className="text-lg font-bold text-gray-800">Transactions</span>
-              
+              {!loading && (
+                <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                  {transactions.length}
+                </span>
+              )}
             </div>
           </div>
 
@@ -93,7 +100,6 @@ export default function TransactionsPage() {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Add Transaction</DialogTitle>
-                
                 <DialogDescription>Record Jama (diya) or Wapsi (liya).</DialogDescription>
               </DialogHeader>
               <AddTransactionForm
@@ -119,7 +125,6 @@ export default function TransactionsPage() {
                 <p className="text-xs text-gray-400">Credit given</p>
               </div>
             </div>
-
             <div className="bg-white rounded-2xl border border-gray-100 shadow-lg p-5 flex items-center gap-4">
               <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                 <ArrowDownCircle className="h-6 w-6 text-green-500" />
@@ -130,7 +135,6 @@ export default function TransactionsPage() {
                 <p className="text-xs text-gray-400">Cash received</p>
               </div>
             </div>
-
             <div className="bg-white rounded-2xl border border-gray-100 shadow-lg p-5 flex items-center gap-4">
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${netUdhaar > 0 ? "bg-orange-100" : "bg-blue-100"}`}>
                 <Receipt className={`h-6 w-6 ${netUdhaar > 0 ? "text-orange-500" : "text-blue-500"}`} />
@@ -141,14 +145,13 @@ export default function TransactionsPage() {
                   Rs. {Math.abs(netUdhaar).toLocaleString()}
                 </p>
                 <p className="text-xs text-gray-400">
-                  {netUdhaar > 0 ? "Still outstanding" : netUdhaar < 0 ? "Overpaid" : "Fully settled ✓"}
+                  {netUdhaar > 0 ? "Outstanding" : netUdhaar < 0 ? "Overpaid" : "Settled ✓"}
                 </p>
               </div>
             </div>
           </div>
         )}
 
-        {/* Content */}
         {loading ? (
           <div className="flex flex-col items-center justify-center py-32 gap-3">
             <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
@@ -160,7 +163,7 @@ export default function TransactionsPage() {
               <Receipt className="h-10 w-10 text-blue-400" />
             </div>
             <h3 className="text-lg font-semibold text-gray-800">Pehle customer add karein</h3>
-            <p className="text-sm text-gray-500">Transaction ke liye ek bhi customer nahi hai.</p>
+            <p className="text-sm text-gray-500">Transaction ke liye customer hona zaruri hai.</p>
             <Link href="/customers"><Button>Go to Customers</Button></Link>
           </div>
         ) : transactions.length === 0 ? (
@@ -176,41 +179,54 @@ export default function TransactionsPage() {
           <div className="bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
               <h2 className="font-semibold text-gray-800">All Transactions</h2>
-              {!loading && (
-                <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                  {transactions.length}
-                </span>
-              )}
+              <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                {transactions.length}
+              </span>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 border-b border-gray-100">
                   <tr>
-                    {["Customer", "Type", "Amount", "Description", "Date", "Actions"].map((h) => (
-                      <th key={h} className={`px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider ${h === "Actions" ? "text-right" : "text-left"}`}>{h}</th>
-                    ))}
+                    {/* Column order: Name, Description, Amount, Type, Date, Actions */}
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Description</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Amount</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Type</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
+                    <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {transactions.map((tx) => (
-                    <tr key={tx.id} className="hover:bg-blue-50/40 transition-colors">
-                      {/* Customer */}
+                    <tr
+                      key={tx.id}
+                      className="hover:bg-blue-50/40 transition-colors cursor-pointer"
+                      onClick={() => router.push(`/transactions/${tx.id}`)}
+                    >
+                      {/* Name — customer name only, no phone */}
                       <td className="px-6 py-4">
-                        <Link href={`/customers/${tx.customerId}`} className="flex items-center gap-3 group">
+                        <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
                             <span className="text-xs font-bold text-blue-700">
                               {tx.customer?.name.charAt(0).toUpperCase() ?? "?"}
                             </span>
                           </div>
-                          <div>
-                            <p className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
-                              {tx.customer?.name ?? "—"}
-                            </p>
-                            {tx.customer?.phone && (
-                              <p className="text-xs text-gray-400">{tx.customer.phone}</p>
-                            )}
-                          </div>
-                        </Link>
+                          <span className="font-medium text-gray-900">
+                            {tx.customer?.name ?? "—"}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Description */}
+                      <td className="px-6 py-4 text-gray-500 max-w-[180px] truncate">
+                        {tx.description ?? <span className="text-gray-300">—</span>}
+                      </td>
+
+                      {/* Amount */}
+                      <td className="px-6 py-4">
+                        <span className={`font-bold ${tx.type === "jama" ? "text-red-600" : "text-green-600"}`}>
+                          {tx.type === "jama" ? "+" : "−"} Rs. {tx.amount.toLocaleString()}
+                        </span>
                       </td>
 
                       {/* Type */}
@@ -221,18 +237,6 @@ export default function TransactionsPage() {
                         </span>
                       </td>
 
-                      {/* Amount */}
-                      <td className="px-6 py-4">
-                        <span className={`font-bold text-base ${tx.type === "jama" ? "text-red-600" : "text-green-600"}`}>
-                          {tx.type === "jama" ? "+" : "-"} Rs. {tx.amount.toLocaleString()}
-                        </span>
-                      </td>
-
-                      {/* Description */}
-                      <td className="px-6 py-4 text-gray-500 max-w-[160px] truncate">
-                        {tx.description ?? <span className="text-gray-300">—</span>}
-                      </td>
-
                       {/* Date */}
                       <td className="px-6 py-4 text-gray-400 text-xs whitespace-nowrap">
                         {new Date(tx.createdAt).toLocaleDateString("en-PK", {
@@ -240,19 +244,24 @@ export default function TransactionsPage() {
                         })}
                       </td>
 
-                      {/* Actions */}
-                      <td className="px-6 py-4">
+                      {/* Actions — stop propagation so clicks don't navigate */}
+                      <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-end gap-1">
-                          <Button variant="ghost" size="icon" onClick={() => setEditTx(tx)}>
+                          <Button
+                            variant="ghost" size="icon"
+                            onClick={() => setEditTx(tx)}
+                          >
                             <Pencil className="h-4 w-4" />
                           </Button>
                           <Button
                             variant="ghost" size="icon"
                             className="text-red-400 hover:text-red-600 hover:bg-red-50"
                             disabled={deletingId === tx.id}
-                            onClick={() => handleDelete(tx.id)}
+                            onClick={() => setConfirmTx(tx)}
                           >
-                            {deletingId === tx.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                            {deletingId === tx.id
+                              ? <Loader2 className="h-4 w-4 animate-spin" />
+                              : <Trash2 className="h-4 w-4" />}
                           </Button>
                         </div>
                       </td>
@@ -286,6 +295,38 @@ export default function TransactionsPage() {
               onCancel={() => setEditTx(null)}
             />
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={!!confirmTx} onOpenChange={(o) => !o && setConfirmTx(null)}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Delete Transaction?</DialogTitle>
+            <DialogDescription>
+              {confirmTx && (
+                <>
+                  This will permanently delete the{" "}
+                  <strong>{confirmTx.type === "jama" ? "Jama" : "Wapsi"}</strong> of{" "}
+                  <strong>Rs. {confirmTx.amount.toLocaleString()}</strong> for{" "}
+                  <strong>{confirmTx.customer?.name}</strong>. This cannot be undone.
+                </>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex gap-2 justify-end pt-2">
+            <Button variant="outline" onClick={() => setConfirmTx(null)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={!!deletingId}
+              onClick={() => confirmTx && handleDelete(confirmTx)}
+            >
+              {deletingId ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+              Yes, Delete
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

@@ -2,6 +2,31 @@ import { prisma } from "@/lib/prisma";
 
 const MOCK_USER_ID = "test-user-123" as const;
 
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+
+    const transaction = await prisma.transaction.findFirst({
+      where: { id, userId: MOCK_USER_ID },
+      include: {
+        customer: { select: { id: true, name: true, phone: true, address: true } },
+      },
+    });
+
+    if (!transaction) {
+      return Response.json({ error: "Transaction not found" }, { status: 404 });
+    }
+
+    return Response.json(transaction);
+  } catch (error) {
+    console.error("[GET /api/transactions/:id]", error);
+    return Response.json({ error: "Failed to fetch transaction" }, { status: 500 });
+  }
+}
+
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
