@@ -80,10 +80,10 @@ export function EditTransactionForm({
           Customer <span className="text-red-500">*</span>
         </Label>
         <Select id="edit-customerId" {...register("customerId")}>
-          <option value="">— Select customer —</option>
+          <option value="">Select customer </option>
           {customers.map((c) => (
             <option key={c.id} value={c.id}>
-              {c.name}{c.phone ? ` · ${c.phone}` : ""}
+              {c.name}
             </option>
           ))}
         </Select>
@@ -133,7 +133,7 @@ export function EditTransactionForm({
       </div>
 
       <div className="flex justify-end gap-2 pt-2">
-        <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
+        <Button type="button" size="lg"   variant="outline" onClick={onCancel}>Cancel</Button>
         <Button type="submit" disabled={isSubmitting} size="lg">
           {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           {isSubmitting ? "Saving..." : "Save Changes"}

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
   ArrowLeft, ArrowUpCircle, ArrowDownCircle,
@@ -10,6 +10,7 @@ import {
   Pencil, Trash2, CalendarDays, Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog, DialogContent, DialogDescription,
   DialogHeader, DialogTitle, DialogTrigger,
@@ -22,6 +23,7 @@ import type { Transaction } from "@/types/transaction";
 
 export default function CustomerDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
 
   const [customer, setCustomer]     = useState<Customer | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -72,8 +74,103 @@ export default function CustomerDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+        {/* Header */}
+        <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-10">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Skeleton className="h-5 w-20" />
+              <div className="h-4 w-px bg-gray-200" />
+              <div className="flex items-center gap-2">
+                <Skeleton className="w-9 h-9 rounded-full" />
+                <Skeleton className="h-5 w-32" />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Skeleton className="h-8 w-16" />
+              <Skeleton className="h-8 w-32" />
+            </div>
+          </div>
+        </header>
+
+        <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {/* Profile card skeleton */}
+            <div className="md:col-span-1 bg-white rounded-2xl border border-gray-100 shadow-lg p-6 flex flex-col gap-4">
+              <Skeleton className="w-16 h-16 rounded-2xl animate-pulse" />
+              <div className="space-y-2">
+                <Skeleton className="h-5 w-32" />
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-28" />
+              </div>
+              <div className="pt-2 border-t border-gray-100 space-y-2">
+                <Skeleton className="h-3 w-20" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+            </div>
+
+            {/* Balance cards skeleton */}
+            <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-lg p-5 space-y-3">
+                  <Skeleton className="w-10 h-10 rounded-xl" />
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-6 w-32" />
+                  <Skeleton className="h-3 w-16" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Ledger skeleton */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <div className="space-y-1">
+                <Skeleton className="h-5 w-36" />
+                <Skeleton className="h-3.5 w-24" />
+              </div>
+              <div className="flex items-center gap-3">
+                <Skeleton className="h-7 w-16" />
+                <Skeleton className="h-7 w-20" />
+                <Skeleton className="h-7 w-16" />
+              </div>
+            </div>
+            {/* Desktop ledger skeleton */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-sm">
+                <tbody className="divide-y divide-gray-50">
+                  {[...Array(3)].map((_, i) => (
+                    <tr key={i}>
+                      <td className="px-6 py-4"><Skeleton className="h-4 w-20" /></td>
+                      <td className="px-6 py-4"><Skeleton className="h-4 w-32" /></td>
+                      <td className="px-6 py-4"><Skeleton className="h-6 w-16 rounded-full" /></td>
+                      <td className="px-6 py-4"><div className="flex justify-end"><Skeleton className="h-4 w-20" /></div></td>
+                      <td className="px-6 py-4"><div className="flex justify-end"><Skeleton className="h-4 w-20" /></div></td>
+                      <td className="px-6 py-4"><div className="flex justify-end"><Skeleton className="h-4 w-20" /></div></td>
+                      <td className="px-6 py-4"><div className="flex justify-end"><Skeleton className="w-8 h-8 rounded" /></div></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {/* Mobile ledger skeleton */}
+            <div className="block md:hidden divide-y divide-gray-50">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="p-4 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="h-5 w-16 rounded-full" />
+                  </div>
+                  <Skeleton className="h-4 w-36" />
+                  <div className="flex justify-between items-center pt-2">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-8 w-16 rounded" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
@@ -270,64 +367,154 @@ export default function CustomerDetailPage() {
               </Button>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-gray-50 border-b border-gray-100">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Description</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Type</th>
-                    <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider text-red-500">Jama ↑</th>
-                    <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider text-green-500">Wapsi ↓</th>
-                    <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Balance</th>
-                    <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50">
-                  {displayRows.length === 0 ? (
+            <>
+              {/* Desktop Ledger Table */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50 border-b border-gray-100">
                     <tr>
-                      <td colSpan={7} className="px-6 py-10 text-center text-sm text-gray-400">
-                        No {typeFilter} entries.
-                      </td>
+                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
+                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Description</th>
+                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Type</th>
+                      <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider text-red-500">Jama ↑</th>
+                      <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider text-green-500">Wapsi ↓</th>
+                      <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Balance</th>
+                      <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
-                  ) : displayRows.map((tx) => (
-                    <tr key={tx.id} className={`transition-colors ${tx.type === "jama" ? "hover:bg-red-50/30" : "hover:bg-green-50/30"}`}>
-                      <td className="px-6 py-4 text-gray-400 text-xs whitespace-nowrap">
-                        {new Date(tx.createdAt).toLocaleDateString("en-PK", {
-                          day: "numeric", month: "short", year: "numeric",
-                        })}
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {displayRows.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} className="px-6 py-10 text-center text-sm text-gray-400">
+                          No {typeFilter} entries.
+                        </td>
+                      </tr>
+                    ) : displayRows.map((tx) => (
+                      <tr key={tx.id} className={`transition-colors ${tx.type === "jama" ? "hover:bg-red-50/30" : "hover:bg-green-50/30"}`}>
+                        <td className="px-6 py-4 text-gray-400 text-xs whitespace-nowrap">
+                          {new Date(tx.createdAt).toLocaleDateString("en-PK", {
+                            day: "numeric", month: "short", year: "numeric",
+                          })}
+                        </td>
+                        <td className="px-6 py-4 text-gray-600 max-w-[200px] truncate">
+                          {tx.description ?? <span className="text-gray-300 italic">No description</span>}
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold ${tx.type === "jama" ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}>
+                            {tx.type === "jama" ? <ArrowUpCircle className="h-3 w-3" /> : <ArrowDownCircle className="h-3 w-3" />}
+                            {tx.type === "jama" ? "Jama" : "Wapsi"}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-right font-semibold text-red-600">
+                          {tx.type === "jama" ? `Rs. ${tx.amount.toLocaleString()}` : <span className="text-gray-200">—</span>}
+                        </td>
+                        <td className="px-6 py-4 text-right font-semibold text-green-600">
+                          {tx.type === "wapsi" ? `Rs. ${tx.amount.toLocaleString()}` : <span className="text-gray-200">—</span>}
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <span className={`font-bold text-xs ${tx.runningBalance > 0 ? "text-orange-600" : tx.runningBalance < 0 ? "text-blue-600" : "text-green-600"}`}>
+                            Rs. {Math.abs(tx.runningBalance).toLocaleString()}
+                          </span>
+                          <span className="text-gray-400 text-xs ml-1">
+                            {tx.runningBalance > 0 ? "↑" : tx.runningBalance < 0 ? "↓" : "✓"}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center justify-end gap-1">
+                            <Button variant="ghost" size="icon" onClick={() => setEditTx(tx)}>
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost" size="icon"
+                              className="text-red-400 hover:text-red-600 hover:bg-red-50"
+                              disabled={deletingId === tx.id}
+                              onClick={() => setConfirmTx(tx)}
+                            >
+                              {deletingId === tx.id
+                                ? <Loader2 className="h-4 w-4 animate-spin" />
+                                : <Trash2 className="h-4 w-4" />}
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+
+                  {/* Totals footer */}
+                  <tfoot className="bg-gray-50 border-t-2 border-gray-200">
+                    <tr>
+                      <td colSpan={3} className="px-6 py-3 text-sm font-bold text-gray-700">
+                        {typeFilter === "all" ? "Grand Total" : `${typeFilter === "jama" ? "Jama" : "Wapsi"} Total`}
                       </td>
-                      <td className="px-6 py-4 text-gray-600 max-w-[200px] truncate">
-                        {tx.description ?? <span className="text-gray-300 italic">No description</span>}
+                      <td className="px-6 py-3 text-right text-sm font-bold text-red-600">
+                        Rs. {filtJama.toLocaleString()}
                       </td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold ${tx.type === "jama" ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}>
+                      <td className="px-6 py-3 text-right text-sm font-bold text-green-600">
+                        Rs. {filtWapsi.toLocaleString()}
+                      </td>
+                      <td className={`px-6 py-3 text-right text-sm font-bold ${(filtJama - filtWapsi) > 0 ? "text-orange-600" : "text-green-600"}`}>
+                        Rs. {Math.abs(filtJama - filtWapsi).toLocaleString()}
+                      </td>
+                      <td />
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+
+              {/* Mobile Card Ledger View */}
+              <div className="block md:hidden divide-y divide-gray-100">
+                {displayRows.length === 0 ? (
+                  <div className="px-6 py-10 text-center text-sm text-gray-400">
+                    No {typeFilter} entries.
+                  </div>
+                ) : (
+                  displayRows.map((tx) => (
+                    <div
+                      key={tx.id}
+                      className={`p-4 transition-colors cursor-pointer space-y-3 ${
+                        tx.type === "jama" ? "hover:bg-red-50/20 active:bg-red-50/30" : "hover:bg-green-50/20 active:bg-green-50/30"
+                      }`}
+                      onClick={() => router.push(`/transactions/${tx.id}`)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs text-gray-400">
+                          {new Date(tx.createdAt).toLocaleDateString("en-PK", {
+                            day: "numeric", month: "short", year: "numeric",
+                          })}
+                        </div>
+                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${tx.type === "jama" ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}>
                           {tx.type === "jama" ? <ArrowUpCircle className="h-3 w-3" /> : <ArrowDownCircle className="h-3 w-3" />}
                           {tx.type === "jama" ? "Jama" : "Wapsi"}
                         </span>
-                      </td>
-                      <td className="px-6 py-4 text-right font-semibold text-red-600">
-                        {tx.type === "jama" ? `Rs. ${tx.amount.toLocaleString()}` : <span className="text-gray-200">—</span>}
-                      </td>
-                      <td className="px-6 py-4 text-right font-semibold text-green-600">
-                        {tx.type === "wapsi" ? `Rs. ${tx.amount.toLocaleString()}` : <span className="text-gray-200">—</span>}
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <span className={`font-bold text-xs ${tx.runningBalance > 0 ? "text-orange-600" : tx.runningBalance < 0 ? "text-blue-600" : "text-green-600"}`}>
-                          Rs. {Math.abs(tx.runningBalance).toLocaleString()}
-                        </span>
-                        <span className="text-gray-400 text-xs ml-1">
-                          {tx.runningBalance > 0 ? "↑" : tx.runningBalance < 0 ? "↓" : "✓"}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center justify-end gap-1">
-                          <Button variant="ghost" size="icon" onClick={() => setEditTx(tx)}>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm font-semibold text-gray-800 truncate max-w-[200px]">
+                          {tx.description ?? <span className="text-gray-300 italic">No description</span>}
+                        </div>
+                        <div className="text-right">
+                          <span className={`font-bold text-sm ${tx.type === "jama" ? "text-red-600" : "text-green-600"}`}>
+                            {tx.type === "jama" ? "+" : "−"} Rs. {tx.amount.toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-between items-center text-xs pt-1">
+                        <div className="text-gray-500">
+                          Balance:{" "}
+                          <span className={`font-bold ${tx.runningBalance > 0 ? "text-orange-600" : tx.runningBalance < 0 ? "text-blue-600" : "text-green-600"}`}>
+                            Rs. {Math.abs(tx.runningBalance).toLocaleString()}
+                          </span>
+                          <span className="text-gray-400 ml-0.5">
+                            {tx.runningBalance > 0 ? "↑" : tx.runningBalance < 0 ? "↓" : "✓"}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setEditTx(tx)}>
                             <Pencil className="h-4 w-4" />
                           </Button>
                           <Button
-                            variant="ghost" size="icon"
-                            className="text-red-400 hover:text-red-600 hover:bg-red-50"
+                            variant="ghost" size="icon" className="h-8 w-8 text-red-400 hover:text-red-600 hover:bg-red-50"
                             disabled={deletingId === tx.id}
                             onClick={() => setConfirmTx(tx)}
                           >
@@ -336,31 +523,29 @@ export default function CustomerDetailPage() {
                               : <Trash2 className="h-4 w-4" />}
                           </Button>
                         </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-
-                {/* Totals footer */}
-                <tfoot className="bg-gray-50 border-t-2 border-gray-200">
-                  <tr>
-                    <td colSpan={3} className="px-6 py-3 text-sm font-bold text-gray-700">
-                      {typeFilter === "all" ? "Grand Total" : `${typeFilter === "jama" ? "Jama" : "Wapsi"} Total`}
-                    </td>
-                    <td className="px-6 py-3 text-right text-sm font-bold text-red-600">
-                      Rs. {filtJama.toLocaleString()}
-                    </td>
-                    <td className="px-6 py-3 text-right text-sm font-bold text-green-600">
-                      Rs. {filtWapsi.toLocaleString()}
-                    </td>
-                    <td className={`px-6 py-3 text-right text-sm font-bold ${(filtJama - filtWapsi) > 0 ? "text-orange-600" : "text-green-600"}`}>
+                      </div>
+                    </div>
+                  ))
+                )}
+                {/* Grand totals in mobile view */}
+                <div className="bg-gray-50 p-4 border-t border-gray-100 flex flex-col gap-1 text-xs">
+                  <div className="flex justify-between font-medium">
+                    <span className="text-gray-500">Total Jama:</span>
+                    <span className="text-red-600 font-semibold">Rs. {filtJama.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between font-medium">
+                    <span className="text-gray-500">Total Wapsi:</span>
+                    <span className="text-green-600 font-semibold">Rs. {filtWapsi.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between font-bold border-t border-gray-200/60 pt-1 text-sm">
+                    <span className="text-gray-700">Net Udhaar:</span>
+                    <span className={(filtJama - filtWapsi) > 0 ? "text-orange-600" : "text-green-600"}>
                       Rs. {Math.abs(filtJama - filtWapsi).toLocaleString()}
-                    </td>
-                    <td />
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </>
           )}
         </div>
       </main>

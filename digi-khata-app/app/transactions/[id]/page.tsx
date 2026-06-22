@@ -10,6 +10,7 @@ import {
   CalendarDays, User, FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog, DialogContent, DialogDescription,
   DialogHeader, DialogTitle,
@@ -64,8 +65,58 @@ export default function TransactionDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+        {/* Header */}
+        <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-10">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Skeleton className="h-5 w-24 bg-gray-200" />
+              <div className="h-4 w-px bg-gray-200" />
+              <div className="flex items-center gap-2">
+                <Skeleton className="w-8 h-8 rounded-lg bg-gray-200" />
+                <Skeleton className="h-5 w-32 bg-gray-200" />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Skeleton className="h-8 w-16 bg-gray-200" />
+              <Skeleton className="h-8 w-16 bg-gray-200" />
+            </div>
+          </div>
+        </header>
+
+        <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-4">
+          {/* Amount card skeleton */}
+          <div className="rounded-2xl border border-gray-200 bg-white/60 shadow-lg p-8 text-center space-y-4 animate-pulse">
+            <Skeleton className="w-16 h-16 rounded-full mx-auto bg-gray-200" />
+            <Skeleton className="h-10 w-48 mx-auto bg-gray-200" />
+            <Skeleton className="h-6 w-32 mx-auto rounded-full bg-gray-200" />
+          </div>
+
+          {/* Details card skeleton */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-lg divide-y divide-gray-50 p-6 space-y-4">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="flex items-center gap-4 pt-2">
+                <Skeleton className="w-9 h-9 rounded-xl bg-gray-200" />
+                <div className="space-y-1.5 flex-1 animate-pulse">
+                  <Skeleton className="h-3 w-16 bg-gray-200" />
+                  <Skeleton className="h-5 w-48 bg-gray-200" />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Link card skeleton */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-lg p-4 flex items-center justify-between animate-pulse">
+            <div className="flex items-center gap-3">
+              <Skeleton className="w-9 h-9 rounded-full bg-gray-200" />
+              <div className="space-y-1.5">
+                <Skeleton className="h-4 w-28 bg-gray-200" />
+                <Skeleton className="h-3 w-20 bg-gray-200" />
+              </div>
+            </div>
+            <Skeleton className="h-4 w-4 rounded bg-gray-200" />
+          </div>
+        </main>
       </div>
     );
   }
@@ -252,19 +303,29 @@ export default function TransactionDetailPage() {
               <strong>{tx.customer?.name}</strong>. This cannot be undone.
             </DialogDescription>
           </DialogHeader>
-          <div className="flex gap-2 justify-end pt-2">
-            <Button variant="outline" onClick={() => setConfirmDelete(false)}>
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={deleting}
-            >
-              {deleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
-              {deleting ? "Deleting..." : "Yes, Delete"}
-            </Button>
-          </div>
+          <div className="flex justify-end gap-2 pt-2">
+  <Button
+    variant="outline"
+    className="w-32"
+    onClick={() => setConfirmDelete(false)}
+  >
+    Cancel
+  </Button>
+
+  <Button
+    variant="destructive"
+    className="w-32"
+    onClick={handleDelete}
+    disabled={deleting}
+  >
+    {deleting ? (
+      <Loader2 className="h-4 w-4 animate-spin" />
+    ) : (
+      <Trash2 className="h-4 w-4" />
+    )}
+    {deleting ? "Deleting..." : "Yes, Delete"}
+  </Button>
+</div>
         </DialogContent>
       </Dialog>
     </div>

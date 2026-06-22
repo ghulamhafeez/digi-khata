@@ -81,7 +81,7 @@ export function AddTransactionForm({
             Customer <span className="text-red-500">*</span>
           </Label>
           <Select id="customerId" {...register("customerId")}>
-            <option value="">— Select customer —</option>
+            <option value="">Select customer</option>
             {customers.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}

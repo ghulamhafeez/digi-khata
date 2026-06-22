@@ -13,6 +13,7 @@ import {
 import { AddCustomerForm } from "@/components/forms/add-customer-form";
 import { EditCustomerForm } from "@/components/forms/edit-customer-form";
 import type { Customer } from "@/types/customer";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function CustomersPage() {
   const router = useRouter();
@@ -96,9 +97,67 @@ export default function CustomersPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-32 gap-3">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-            <p className="text-sm text-gray-500">Loading customers...</p>
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <Skeleton className="h-6 w-32" />
+              <Skeleton className="h-4 w-20" />
+            </div>
+            {/* Desktop skeleton */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50 border-b border-gray-100">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-400 uppercase">Name</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-400 uppercase">Phone</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-400 uppercase">Address</th>
+                    <th className="px-6 py-3 text-right text-xs font-semibold text-gray-400 uppercase">Udhaar</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-400 uppercase">Added</th>
+                    <th className="px-6 py-3 text-right text-xs font-semibold text-gray-400 uppercase">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-50">
+                  {[...Array(5)].map((_, i) => (
+                    <tr key={i}>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <Skeleton className="w-8 h-8 rounded-full" />
+                          <Skeleton className="h-4 w-24" />
+                        </div>
+                      </td>
+                      <td className="px-6 py-4"><Skeleton className="h-4 w-24" /></td>
+                      <td className="px-6 py-4"><Skeleton className="h-4 w-32" /></td>
+                      <td className="px-6 py-4"><div className="flex justify-end"><Skeleton className="h-4 w-20" /></div></td>
+                      <td className="px-6 py-4"><Skeleton className="h-4 w-20" /></td>
+                      <td className="px-6 py-4"><div className="flex justify-end gap-2"><Skeleton className="w-8 h-8 rounded" /><Skeleton className="w-8 h-8 rounded" /></div></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {/* Mobile skeleton */}
+            <div className="block md:hidden divide-y divide-gray-50">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="w-8 h-8 rounded-full" />
+                      <Skeleton className="h-4 w-24" />
+                    </div>
+                    <Skeleton className="h-4 w-20" />
+                  </div>
+                  <div className="flex justify-between items-center pt-2">
+                    <div className="space-y-1">
+                      <Skeleton className="h-3 w-28" />
+                      <Skeleton className="h-3 w-36" />
+                    </div>
+                    <div className="flex gap-2">
+                      <Skeleton className="w-8 h-8 rounded" />
+                      <Skeleton className="w-8 h-8 rounded" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         ) : customers.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-32 gap-4 text-center">
@@ -115,7 +174,8 @@ export default function CustomersPage() {
               <h2 className="font-semibold text-gray-800">All Customers</h2>
               <span className="text-sm text-gray-500">{customers.length} customers</span>
             </div>
-            <div className="overflow-x-auto">
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 border-b border-gray-100">
                   <tr>
@@ -203,6 +263,67 @@ export default function CustomersPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+            {/* Mobile Card View */}
+            <div className="block md:hidden divide-y divide-gray-100">
+              {customers.map((customer) => (
+                <div
+                  key={customer.id}
+                  className="p-4 hover:bg-blue-50/40 active:bg-blue-100/40 transition-colors cursor-pointer space-y-3"
+                  onClick={() => router.push(`/customers/${customer.id}`)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                        <span className="text-xs font-bold text-blue-700">
+                          {customer.name.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                      <span className="font-semibold text-gray-900">
+                        {customer.name}
+                      </span>
+                    </div>
+                    {/* Udhaar balance */}
+                    <div className="text-right">
+                      {(customer.totalUdhaar ?? 0) > 0 ? (
+                        <span className="font-bold text-orange-600 text-sm">
+                          Rs. {(customer.totalUdhaar ?? 0).toLocaleString()}
+                        </span>
+                      ) : (customer.totalUdhaar ?? 0) < 0 ? (
+                        <span className="font-bold text-green-600 text-sm">
+                          Rs. {Math.abs(customer.totalUdhaar ?? 0).toLocaleString()}
+                          <span className="text-[10px] font-normal block text-gray-400">overpaid</span>
+                        </span>
+                      ) : (
+                        <span className="text-xs text-green-600 font-semibold">Saaf ✓</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center text-xs text-gray-500 pt-1">
+                    <div className="space-y-0.5">
+                      {customer.phone && <p>📞 {customer.phone}</p>}
+                      {customer.address && <p className="max-w-[200px] truncate">📍 {customer.address}</p>}
+                    </div>
+                    <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                      <Button
+                        variant="ghost" size="icon" className="h-8 w-8"
+                        onClick={() => setEditCustomer(customer)}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost" size="icon" className="h-8 w-8 text-red-400 hover:text-red-600 hover:bg-red-50"
+                        disabled={deletingId === customer.id}
+                        onClick={() => setConfirmId(customer.id)}
+                      >
+                        {deletingId === customer.id
+                          ? <Loader2 className="h-4 w-4 animate-spin" />
+                          : <Trash2 className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
