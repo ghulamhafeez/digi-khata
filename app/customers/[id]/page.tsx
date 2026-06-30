@@ -209,32 +209,39 @@ export default function CustomerDetailPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       {/* ── Header ── */}
       <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between gap-3">
+          {/* Back + name */}
+          <div className="flex items-center gap-2 min-w-0">
             <Link href="/customers">
-              <button className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
-                <ArrowLeft className="h-4 w-4" /> Customers
+              <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-blue-600 transition-colors min-h-[44px] px-1" aria-label="Back to Customers">
+                <ArrowLeft className="h-4 w-4 flex-shrink-0" />
+                <span className="hidden sm:inline">Customers</span>
               </button>
             </Link>
-            <div className="h-4 w-px bg-gray-200" />
-            <div className="flex items-center gap-2">
-              <div className="w-9 h-9 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+            <div className="h-4 w-px bg-gray-200 flex-shrink-0" />
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
                 <span className="text-white font-bold text-sm">
                   {customer.name.charAt(0).toUpperCase()}
                 </span>
               </div>
-              <span className="font-bold text-gray-900">{customer.name}</span>
+              <span className="font-bold text-gray-900 truncate text-sm sm:text-base">{customer.name}</span>
             </div>
           </div>
 
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
-              <Pencil className="h-4 w-4" /> Edit
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" size="sm" onClick={() => setEditOpen(true)} aria-label="Edit customer">
+              <Pencil className="h-4 w-4" />
+              <span className="hidden sm:inline">Edit</span>
             </Button>
 
             <Dialog open={addOpen} onOpenChange={setAddOpen}>
               <DialogTrigger asChild>
-                <Button size="sm"><Plus className="h-4 w-4" /> Add Transaction</Button>
+                <Button size="sm" aria-label="Add transaction">
+                  <Plus className="h-4 w-4" />
+                  <span className="hidden sm:inline">Add Transaction</span>
+                  <span className="sm:hidden">Add</span>
+                </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -331,24 +338,25 @@ export default function CustomerDetailPage() {
 
         {/* ── Ledger Table ── */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <div>
-              <h2 className="font-semibold text-gray-800">Transaction History</h2>
-              <p className="text-xs text-gray-400 mt-0.5">Complete khata ledger</p>
+          <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <h2 className="font-semibold text-gray-800 text-sm sm:text-base">Transaction History</h2>
+              <p className="text-xs text-gray-400 mt-0.5 hidden sm:block">Complete khata ledger</p>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-500">{filtered.length} entries</span>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <span className="text-xs text-gray-500 hidden sm:inline">{filtered.length} entries</span>
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value as "all" | "jama" | "wapsi")}
-                className="text-xs border border-gray-200 rounded-lg px-2.5 py-1.5 text-gray-600 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="text-xs border border-gray-200 rounded-lg px-2 py-2 text-gray-600 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[44px]"
               >
                 <option value="all">All</option>
-                <option value="jama">Jama only</option>
-                <option value="wapsi">Wapsi only</option>
+                <option value="jama">Jama</option>
+                <option value="wapsi">Wapsi</option>
               </select>
-              <Button size="sm" onClick={() => setAddOpen(true)}>
-                <Plus className="h-4 w-4" /> Add
+              <Button size="sm" onClick={() => setAddOpen(true)} aria-label="Add transaction">
+                <Plus className="h-4 w-4" />
+                <span className="hidden sm:inline">Add</span>
               </Button>
             </div>
           </div>
@@ -550,7 +558,7 @@ export default function CustomerDetailPage() {
         </div>
       </main>
 
-      <footer className="border-t border-gray-200/50 bg-white/80 backdrop-blur-sm mt-8">
+      <footer className="hidden md:block border-t border-gray-200/50 bg-white/80 backdrop-blur-sm mt-8">
         <div className="max-w-5xl mx-auto px-4 py-6">
           <p className="text-center text-sm text-gray-500">© {new Date().getFullYear()} Digi Khata.</p>
         </div>

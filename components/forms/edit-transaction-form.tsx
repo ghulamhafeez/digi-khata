@@ -132,9 +132,9 @@ export function EditTransactionForm({
         <Input id="edit-description" {...register("description")} />
       </div>
 
-      <div className="flex justify-end gap-2 pt-2">
-        <Button type="button" size="lg"   variant="outline" onClick={onCancel}>Cancel</Button>
-        <Button type="submit" disabled={isSubmitting} size="lg">
+      <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2">
+        <Button type="button" size="lg" variant="outline" onClick={onCancel} className="w-full sm:w-auto">Cancel</Button>
+        <Button type="submit" disabled={isSubmitting} size="lg" className="w-full sm:w-auto">
           {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           {isSubmitting ? "Saving..." : "Save Changes"}
         </Button>

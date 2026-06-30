@@ -4,8 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft, ArrowUpCircle, ArrowDownCircle,
-  Loader2, Receipt, Users, TrendingUp,
+  Loader2, Receipt, TrendingUp,
   AlertCircle, Filter, X, CalendarDays,
+  Users,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -104,43 +105,30 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/">
-              <button className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
-                <ArrowLeft className="h-4 w-4" /> Home
-              </button>
-            </Link>
-            <div className="h-4 w-px bg-gray-200" />
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                <TrendingUp className="h-4 w-4 text-blue-600" />
-              </div>
-              <span className="text-lg font-bold text-gray-800">Dashboard</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between gap-3">
+          {/* Title */}
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <TrendingUp className="h-4 w-4 text-blue-600" />
             </div>
+            <span className="text-base sm:text-lg font-bold text-gray-800 truncate">Dashboard</span>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-shrink-0">
             <Button
               variant={hasActive ? "default" : "outline"}
               size="sm"
               onClick={() => setShowFilter((v) => !v)}
             >
               <Filter className="h-4 w-4" />
-              {hasActive ? "Filters Active" : "Filter"}
+              <span className="hidden sm:inline">{hasActive ? "Filters Active" : "Filter"}</span>
             </Button>
-            <Link href="/customers">
-              <Button variant="outline" size="sm"><Users className="h-4 w-4" /> Customers</Button>
-            </Link>
-            <Link href="/transactions">
-              <Button size="sm"><Receipt className="h-4 w-4" /> Transactions</Button>
-            </Link>
           </div>
         </div>
 
         {/* Filter panel — slides in below header */}
         {showFilter && (
           <div className="border-t border-gray-100 bg-white px-4 sm:px-6 lg:px-8 py-4">
-            <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 items-end">
+            <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
               <div className="space-y-1.5">
                 <Label className="flex items-center gap-1.5 text-xs">
                   <CalendarDays className="h-3.5 w-3.5" /> From
@@ -586,56 +574,89 @@ export default function DashboardPage() {
                   <p className="text-sm text-gray-400">No outstanding balances.</p>
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead className="bg-gray-50 border-b border-gray-100">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Customer</th>
-                        <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Jama</th>
-                        <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Wapsi</th>
-                        <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Net Udhaar</th>
-                        <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-50">
-                      {data.topDebtors.map((c) => (
-                        <tr key={c.id} className="hover:bg-blue-50/30 transition-colors">
-                          <td className="px-6 py-3">
-                            <Link href={`/customers/${c.id}`} className="flex items-center gap-3">
-                              <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                <>
+                  {/* Desktop Table */}
+                  <div className="hidden md:block overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead className="bg-gray-50 border-b border-gray-100">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Customer</th>
+                          <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Jama</th>
+                          <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Wapsi</th>
+                          <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Net Udhaar</th>
+                          <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-50">
+                        {data.topDebtors.map((c) => (
+                          <tr key={c.id} className="hover:bg-blue-50/30 transition-colors">
+                            <td className="px-6 py-3">
+                              <Link href={`/customers/${c.id}`} className="flex items-center gap-3">
+                                <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                                  <span className="text-xs font-bold text-blue-700">
+                                    {c.name.charAt(0).toUpperCase()}
+                                  </span>
+                                </div>
+                                <span className="font-medium text-gray-900 hover:text-blue-600">{c.name}</span>
+                              </Link>
+                            </td>
+                            <td className="px-6 py-3 text-right text-red-600 font-medium">
+                              Rs.&nbsp;{(c.totalJama ?? 0).toLocaleString()}
+                            </td>
+                            <td className="px-6 py-3 text-right text-green-600 font-medium">
+                              Rs.&nbsp;{(c.totalWapsi ?? 0).toLocaleString()}
+                            </td>
+                            <td className="px-6 py-3 text-right font-bold text-orange-600">
+                              Rs.&nbsp;{c.totalUdhaar.toLocaleString()}
+                            </td>
+                            <td className="px-6 py-3 text-right">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-700">
+                                Pending
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  {/* Mobile Cards */}
+                  <div className="block md:hidden divide-y divide-gray-100">
+                    {data.topDebtors.map((c) => (
+                      <Link key={c.id} href={`/customers/${c.id}`}>
+                        <div className="p-4 hover:bg-blue-50/40 active:bg-blue-100/40 transition-colors space-y-2">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
                                 <span className="text-xs font-bold text-blue-700">
                                   {c.name.charAt(0).toUpperCase()}
                                 </span>
                               </div>
-                              <span className="font-medium text-gray-900 hover:text-blue-600">{c.name}</span>
-                            </Link>
-                          </td>
-                          <td className="px-6 py-3 text-right text-red-600 font-medium">
-                            Rs.&nbsp;{(c.totalJama ?? 0).toLocaleString()}
-                          </td>
-                          <td className="px-6 py-3 text-right text-green-600 font-medium">
-                            Rs.&nbsp;{(c.totalWapsi ?? 0).toLocaleString()}
-                          </td>
-                          <td className="px-6 py-3 text-right font-bold text-orange-600">
-                            Rs.&nbsp;{c.totalUdhaar.toLocaleString()}
-                          </td>
-                          <td className="px-6 py-3 text-right">
+                              <span className="font-semibold text-gray-900">{c.name}</span>
+                            </div>
                             <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-700">
                               Pending
                             </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                          </div>
+                          <div className="flex justify-between text-xs text-gray-500 pl-10">
+                            <span>Jama: <span className="text-red-600 font-medium">Rs. {(c.totalJama ?? 0).toLocaleString()}</span></span>
+                            <span>Wapsi: <span className="text-green-600 font-medium">Rs. {(c.totalWapsi ?? 0).toLocaleString()}</span></span>
+                          </div>
+                          <div className="flex justify-between text-sm font-bold pl-10">
+                            <span className="text-gray-500">Net Udhaar</span>
+                            <span className="text-orange-600">Rs. {c.totalUdhaar.toLocaleString()}</span>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </>
               )}
             </div>
           </>
         )}
       </main>
 
-      <footer className="border-t border-gray-200/50 bg-white/80 backdrop-blur-sm mt-8">
+      <footer className="hidden md:block border-t border-gray-200/50 bg-white/80 backdrop-blur-sm mt-8">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <p className="text-center text-sm text-gray-500">© {new Date().getFullYear()} Digi Khata.</p>
         </div>

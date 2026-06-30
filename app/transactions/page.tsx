@@ -1,11 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
-  ArrowLeft, ArrowUpCircle, ArrowDownCircle,
+  ArrowUpCircle, ArrowDownCircle,
   Loader2, Pencil, Plus, Receipt, Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -71,31 +70,26 @@ export default function TransactionsPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/">
-              <button className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
-                <ArrowLeft className="h-4 w-4" /> Home
-              </button>
-            </Link>
-            <div className="h-4 w-px bg-gray-200" />
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Receipt className="h-4 w-4 text-blue-600" />
-              </div>
-              <span className="text-lg font-bold text-gray-800">Transactions</span>
-              {!loading && (
-                <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                  {transactions.length}
-                </span>
-              )}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between gap-3">
+          {/* Title */}
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Receipt className="h-4 w-4 text-blue-600" />
             </div>
+            <span className="text-base sm:text-lg font-bold text-gray-800 truncate">Transactions</span>
+            {!loading && (
+              <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0">
+                {transactions.length}
+              </span>
+            )}
           </div>
 
           <Dialog open={addOpen} onOpenChange={setAddOpen}>
             <DialogTrigger asChild>
-              <Button disabled={customers.length === 0}>
-                <Plus className="h-4 w-4" /> Add Transaction
+              <Button size="sm" disabled={customers.length === 0} className="flex-shrink-0">
+                <Plus className="h-4 w-4" />
+                <span className="hidden sm:inline">Add Transaction</span>
+                <span className="sm:hidden">Add</span>
               </Button>
             </DialogTrigger>
             <DialogContent>
@@ -381,7 +375,7 @@ export default function TransactionsPage() {
         )}
       </main>
 
-      <footer className="border-t border-gray-200/50 bg-white/80 backdrop-blur-sm mt-8">
+      <footer className="hidden md:block border-t border-gray-200/50 bg-white/80 backdrop-blur-sm mt-8">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <p className="text-center text-sm text-gray-500">© {new Date().getFullYear()} Digi Khata.</p>
         </div>

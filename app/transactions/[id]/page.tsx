@@ -68,18 +68,18 @@ export default function TransactionDetailPage() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
         {/* Header */}
         <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-10">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Skeleton className="h-5 w-24 bg-gray-200" />
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-5 w-16 sm:w-24 bg-gray-200" />
               <div className="h-4 w-px bg-gray-200" />
               <div className="flex items-center gap-2">
                 <Skeleton className="w-8 h-8 rounded-lg bg-gray-200" />
-                <Skeleton className="h-5 w-32 bg-gray-200" />
+                <Skeleton className="h-5 w-24 sm:w-32 bg-gray-200" />
               </div>
             </div>
             <div className="flex gap-2">
-              <Skeleton className="h-8 w-16 bg-gray-200" />
-              <Skeleton className="h-8 w-16 bg-gray-200" />
+              <Skeleton className="h-11 w-11 md:h-8 md:w-16 bg-gray-200 rounded-lg" />
+              <Skeleton className="h-11 w-11 md:h-8 md:w-16 bg-gray-200 rounded-lg" />
             </div>
           </div>
         </header>
@@ -137,32 +137,36 @@ export default function TransactionDetailPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 min-w-0">
             <Link href="/transactions">
-              <button className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
-                <ArrowLeft className="h-4 w-4" /> Transactions
+              <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-blue-600 transition-colors min-h-[44px] px-1" aria-label="Back to Transactions">
+                <ArrowLeft className="h-4 w-4 flex-shrink-0" />
+                <span className="hidden sm:inline">Transactions</span>
               </button>
             </Link>
-            <div className="h-4 w-px bg-gray-200" />
-            <div className="flex items-center gap-2">
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isJama ? "bg-red-100" : "bg-green-100"}`}>
+            <div className="h-4 w-px bg-gray-200 flex-shrink-0" />
+            <div className="flex items-center gap-2 min-w-0">
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isJama ? "bg-red-100" : "bg-green-100"}`}>
                 <Receipt className={`h-4 w-4 ${isJama ? "text-red-600" : "text-green-600"}`} />
               </div>
-              <span className="text-lg font-bold text-gray-800">Transaction Detail</span>
+              <span className="text-sm sm:text-base font-bold text-gray-800 truncate">Transaction Detail</span>
             </div>
           </div>
 
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
-              <Pencil className="h-4 w-4" /> Edit
+          <div className="flex gap-2 flex-shrink-0">
+            <Button variant="outline" size="sm" onClick={() => setEditOpen(true)} aria-label="Edit">
+              <Pencil className="h-4 w-4" />
+              <span className="hidden sm:inline">Edit</span>
             </Button>
             <Button
               variant="destructive"
               size="sm"
               onClick={() => setConfirmDelete(true)}
+              aria-label="Delete"
             >
-              <Trash2 className="h-4 w-4" /> Delete
+              <Trash2 className="h-4 w-4" />
+              <span className="hidden sm:inline">Delete</span>
             </Button>
           </div>
         </div>
@@ -268,7 +272,7 @@ export default function TransactionDetailPage() {
         </Link>
       </main>
 
-      <footer className="border-t border-gray-200/50 bg-white/80 backdrop-blur-sm mt-8">
+      <footer className="hidden md:block border-t border-gray-200/50 bg-white/80 backdrop-blur-sm mt-8">
         <div className="max-w-3xl mx-auto px-4 py-6">
           <p className="text-center text-sm text-gray-500">© {new Date().getFullYear()} Digi Khata.</p>
         </div>

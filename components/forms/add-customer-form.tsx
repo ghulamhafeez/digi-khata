@@ -97,8 +97,8 @@ export function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
         )}
       </div>
 
-      <div className="flex justify-end gap-2 pt-2">
-        <Button type="submit" disabled={isSubmitting} size="lg">
+      <div className="pt-2">
+        <Button type="submit" disabled={isSubmitting} size="lg" className="w-full">
           {isSubmitting ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (

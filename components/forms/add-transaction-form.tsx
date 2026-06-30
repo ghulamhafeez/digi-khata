@@ -144,8 +144,8 @@ export function AddTransactionForm({
         />
       </div>
 
-      <div className="flex justify-end pt-2">
-        <Button type="submit" disabled={isSubmitting} size="lg">
+      <div className="flex flex-col-reverse sm:flex-row sm:justify-end pt-2">
+        <Button type="submit" disabled={isSubmitting} size="lg" className="w-full">
           {isSubmitting ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (

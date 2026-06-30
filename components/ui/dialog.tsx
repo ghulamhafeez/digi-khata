@@ -34,14 +34,26 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-[50%] top-[50%] z-50 w-full max-w-md translate-x-[-50%] translate-y-[-50%] rounded-2xl border border-gray-100 bg-white p-6 shadow-xl duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+        // Mobile: slides up from bottom as a sheet
+        // Desktop: centered modal
+        "fixed z-50 w-full bg-white shadow-xl duration-200",
+        "data-[state=open]:animate-in data-[state=closed]:animate-out",
+        "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+        // Mobile bottom sheet
+        "bottom-0 left-0 right-0 rounded-t-2xl border-t border-gray-100 p-6",
+        "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+        "max-h-[90dvh] overflow-y-auto",
+        // Desktop centered modal
+        "md:bottom-auto md:left-[50%] md:top-[50%] md:max-w-md md:translate-x-[-50%] md:translate-y-[-50%] md:rounded-2xl md:border md:border-gray-100",
+        "md:data-[state=closed]:zoom-out-95 md:data-[state=open]:zoom-in-95",
+        "md:data-[state=closed]:slide-out-to-bottom-[0%] md:data-[state=open]:slide-in-from-bottom-[0%]",
         className
       )}
       {...props}
     >
       {children}
       <DialogClose className="absolute right-4 top-4 rounded-lg p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
-        <X className="h-4 w-4" />
+        <X className="h-5 w-5" />
         <span className="sr-only">Close</span>
       </DialogClose>
     </DialogPrimitive.Content>
