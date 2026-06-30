@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, Pencil, Plus, Trash2, Users } from "lucide-react";
+import { Loader2, Pencil, Plus, Trash2, Users, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog, DialogContent, DialogDescription,
@@ -61,6 +62,11 @@ export default function CustomersPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between gap-3">
           {/* Title */}
           <div className="flex items-center gap-2 min-w-0">
+            {/* Back to Home — desktop only, mobile uses bottom nav */}
+            <Link href="/" className="hidden md:flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors mr-1">
+              <ArrowLeft className="h-4 w-4" /> Home
+            </Link>
+            <div className="hidden md:block h-4 w-px bg-gray-200 mr-1" />
             <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
               <Users className="h-4 w-4 text-blue-600" />
             </div>
