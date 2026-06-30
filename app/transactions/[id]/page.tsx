@@ -154,21 +154,7 @@ export default function TransactionDetailPage() {
             </div>
           </div>
 
-          <div className="flex gap-2 flex-shrink-0">
-            <Button variant="outline" size="sm" onClick={() => setEditOpen(true)} aria-label="Edit">
-              <Pencil className="h-4 w-4" />
-              <span className="hidden sm:inline">Edit</span>
-            </Button>
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={() => setConfirmDelete(true)}
-              aria-label="Delete"
-            >
-              <Trash2 className="h-4 w-4" />
-              <span className="hidden sm:inline">Delete</span>
-            </Button>
-          </div>
+
         </div>
       </header>
 

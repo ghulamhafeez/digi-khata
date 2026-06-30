@@ -71,11 +71,7 @@ export default function CustomersPage() {
               <Users className="h-4 w-4 text-blue-600" />
             </div>
             <span className="text-base sm:text-lg font-bold text-gray-800 truncate">Customers</span>
-            {!loading && (
-              <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0">
-                {customers.length}
-              </span>
-            )}
+           
           </div>
 
           <Dialog open={addOpen} onOpenChange={setAddOpen}>
@@ -174,7 +170,7 @@ export default function CustomersPage() {
           <div className="bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
               <h2 className="font-semibold text-gray-800">All Customers</h2>
-              <span className="text-sm text-gray-500">{customers.length} customers</span>
+              <span className="text-sm text-gray-500">{customers.length}</span>
             </div>
             {/* Desktop Table View */}
             <div className="hidden md:block overflow-x-auto">
